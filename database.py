@@ -28,10 +28,10 @@ def get_movies(upcoming=False):
     with connection:
         cursor = connection.cursor()
     if upcoming:
-        today = datetime.datetime.today().timestamp
+        today = datetime.datetime.today().timestamp()
         cursor.execute(SELECT_UPCOMING_MOVIES, (today,))
     else:
-        cursor.execute(SELECT_UPCOMING_MOVIES)
+        cursor.execute(SELECT_ALL_MOVIES)
     return cursor.fetchall()
 
 
@@ -43,7 +43,7 @@ def watch_movie(title):
 def get_watched_movies():
     with connection:
         # recall connection.execute returns a cursor
-        return connection.execute(SELECT_WATCHED_MOVIES).fetchall
+        return connection.execute(SELECT_WATCHED_MOVIES).fetchall()
 
 
     
