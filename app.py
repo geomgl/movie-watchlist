@@ -14,7 +14,7 @@ welcome = "Welcome to the watchlist app!"
 
 
 print(welcome)
-database.create_table()
+database.create_tables()
 user_input = input(menu)
 
 def prompt_add_movie():
@@ -32,11 +32,20 @@ def print_movies(heading, movies):
         human_date = movie_date.strftime("%b-%d-%Y")
         print(f"-- {movie[0]} (released on {human_date})")
     print("\n")
-        
+
+def print_watched_movies(username, watched_movies):
+    print(f"----- {username}'s watched movies -----'")
+    for movie in watched_movies:
+        print(movie[1])
+    
+    print("\n")
+    
+
 
 def watch_movie():
-    movie = input("What movie did you watch? ")
-    database.watch_movie(movie)
+    username = input("Username: ")
+    movie_title = input("What movie did you watch? ")
+    database.watch_movie(username, movie_title)
 
 
 while user_input != "6":
@@ -51,8 +60,9 @@ while user_input != "6":
     elif user_input == "4":
         watch_movie()
     elif user_input == "5":
-        movies = database.get_watched_movies()
-        print_movies('Watched', movies)
+        username = input("Username: ")
+        watched_movies = database.get_watched_movies(username)
+        print_watched_movies(username, watched_movies)
     else:
         print("Invalid input, please try again!")
 
