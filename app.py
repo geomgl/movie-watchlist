@@ -7,15 +7,16 @@ menu = """Please select one of the following options:
 3) View all movies
 4) Watch a movie
 5) View watched movies.
-6) Exit.
+6) Add user
+7) Exit.
 
 Your selection: """
 welcome = "Welcome to the watchlist app!"
 
-
 print(welcome)
 database.create_tables()
 user_input = input(menu)
+
 
 def prompt_add_movie():
     title = input("Enter movie title: ")
@@ -25,30 +26,41 @@ def prompt_add_movie():
 
     database.add_movie(title, timestamp)
 
+
+def prompt_add_user():
+    username = input("Create new username: ")
+    database.add_user(username)
+
+
 def print_movies(heading, movies):
     print(f" ----- {heading} movies ----- ")
-    for movie in movies:
-        movie_date = datetime.datetime.fromtimestamp(movie[1])
+    # for movie in movies:
+    # instead, use tuple destructuring
+    for _id, title, release_date in movies:
+        movie_date = datetime.datetime.fromtimestamp(release_date)
         human_date = movie_date.strftime("%b-%d-%Y")
-        print(f"-- {movie[0]} (released on {human_date})")
+        print(f"-- {title} (released on {human_date}, id: {_id})")
     print("\n")
-
-def print_watched_movies(username, watched_movies):
-    print(f"----- {username}'s watched movies -----'")
-    for movie in watched_movies:
-        print(movie[1])
-    
-    print("\n")
-    
 
 
 def watch_movie():
     username = input("Username: ")
-    movie_title = input("What movie did you watch? ")
-    database.watch_movie(username, movie_title)
+    movie_id = input("Enter id of watched movie: ")
+    database.watch_movie(username, movie_id)
 
 
-while user_input != "6":
+def prompt_print_watched_movies():
+    username = input("Username: ")
+    watched_movies = database.get_watched_movies(username)
+    if watched_movies:
+        print_movies(f"{username}'s watched", watched_movies)
+    else:
+        print("User has not watched any movies yet.")
+    
+    print("\n")
+
+
+while user_input != "7":
     if user_input == "1":
         prompt_add_movie()
     elif user_input == "2":
@@ -60,9 +72,9 @@ while user_input != "6":
     elif user_input == "4":
         watch_movie()
     elif user_input == "5":
-        username = input("Username: ")
-        watched_movies = database.get_watched_movies(username)
-        print_watched_movies(username, watched_movies)
+        prompt_print_watched_movies()
+    elif user_input == "6":
+        prompt_add_user()
     else:
         print("Invalid input, please try again!")
 
