@@ -29,7 +29,7 @@ JOIN users ON users.username = watched.user_username
 WHERE users.username = ?
 ;"""
 INSERT_WATCHED_MOVIE = "INSERT INTO watched(user_username, movie_id) VALUES (?, ?);"
-DELETE_MOVIE = "DELETE FROM movies WHERE title = ?;"
+SEARCH_MOVIES = "SELECT * FROM movies WHERE title LIKE ?;"
 
 
 def create_tables():
@@ -66,5 +66,11 @@ def watch_movie(username, movie_id):
 
 def get_watched_movies(username):
     with connection:
-        # recall connection.execute returns a cursor
+        # connection.execute returns a cursor
         return connection.execute(SELECT_WATCHED_MOVIES, (username,)).fetchall()
+
+def search_movies(search_term):
+    with connection:
+        cursor = connection.cursor()
+        cursor.execute(SEARCH_MOVIES, (f"%{search_term}%",))
+        return cursor.fetchall() 

@@ -8,7 +8,8 @@ menu = """Please select one of the following options:
 4) Watch a movie
 5) View watched movies.
 6) Add user
-7) Exit.
+7) Search for movies.
+8) Exit.
 
 Your selection: """
 welcome = "Welcome to the watchlist app!"
@@ -57,24 +58,36 @@ def prompt_print_watched_movies():
     else:
         print("User has not watched any movies yet.")
     
-    print("\n")
+    print('\n' )
+
+def prompt_search_movies():
+    search_term = input("What would you like to search for? ")
+    movies = database.search_movies(search_term)
+    if movies:
+        print_movies('Search results:', movies)
+    else:
+        print('No matching search results.')
+    print('\n')
 
 
-while user_input != "7":
+
+while user_input != "8":
     if user_input == "1":
         prompt_add_movie()
     elif user_input == "2":
         movies = database.get_movies(True)
-        print_movies('Upcoming', movies)
+        print_movies('Upcoming movies', movies)
     elif user_input == "3":
         movies = database.get_movies()
-        print_movies('All', movies)
+        print_movies('All movies', movies)
     elif user_input == "4":
         watch_movie()
     elif user_input == "5":
         prompt_print_watched_movies()
     elif user_input == "6":
         prompt_add_user()
+    elif user_input == "7":
+        prompt_search_movies()
     else:
         print("Invalid input, please try again!")
 
